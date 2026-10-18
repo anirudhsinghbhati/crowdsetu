@@ -8,11 +8,11 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Alerts } from './pages/Alerts';
 import { GateDisplay } from './pages/GateDisplay';
+import { Heatmap } from './pages/Heatmap';
+import { Cameras } from './pages/Cameras';
+import { ZoneDetail } from './pages/ZoneDetail';
+import { Flow } from './pages/Flow';
 import {
-  HeatmapPlaceholder,
-  CamerasPlaceholder,
-  ZoneDetailPlaceholder,
-  FlowPlaceholder,
   DevicesPlaceholder,
   OverridePlaceholder,
   SettingsPlaceholder,
@@ -72,11 +72,11 @@ export const AppRouter: React.FC = () => {
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="heatmap" element={<HeatmapPlaceholder />} />
-          <Route path="cameras" element={<CamerasPlaceholder />} />
-          <Route path="zones/:id" element={<ZoneDetailPlaceholder />} />
+          <Route path="heatmap" element={<Heatmap />} />
+          <Route path="cameras" element={<Cameras />} />
+          <Route path="zones/:id" element={<ZoneDetail />} />
           <Route path="alerts" element={<Alerts />} />
-          <Route path="flow" element={<FlowPlaceholder />} />
+          <Route path="flow" element={<Flow />} />
           <Route path="devices" element={<DevicesPlaceholder />} />
           <Route
             path="override"
