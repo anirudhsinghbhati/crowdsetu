@@ -5,18 +5,18 @@ import { AdminLayout } from './layouts/AdminLayout';
 import { KioskLayout } from './layouts/KioskLayout';
 import { DisplayLayout } from './layouts/DisplayLayout';
 import { Login } from './pages/Login';
+import { Dashboard } from './pages/Dashboard';
+import { Alerts } from './pages/Alerts';
+import { GateDisplay } from './pages/GateDisplay';
 import {
-  DashboardPlaceholder,
   HeatmapPlaceholder,
   CamerasPlaceholder,
   ZoneDetailPlaceholder,
-  AlertsPlaceholder,
   FlowPlaceholder,
   DevicesPlaceholder,
   OverridePlaceholder,
   SettingsPlaceholder,
   ReportsPlaceholder,
-  GateDisplayPlaceholder,
   KioskRegisterPlaceholder,
   KioskSlipPlaceholder,
   KioskLookupPlaceholder,
@@ -49,7 +49,7 @@ export const AppRouter: React.FC = () => {
 
         {/* Public Gate Signage Display (Full-screen, no login) */}
         <Route path="/display" element={<DisplayLayout />}>
-          <Route path=":gateId" element={<GateDisplayPlaceholder />} />
+          <Route path=":gateId" element={<GateDisplay />} />
           <Route index element={<Navigate to="/display/gate-1" replace />} />
         </Route>
 
@@ -71,11 +71,11 @@ export const AppRouter: React.FC = () => {
           }
         >
           <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPlaceholder />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="heatmap" element={<HeatmapPlaceholder />} />
           <Route path="cameras" element={<CamerasPlaceholder />} />
           <Route path="zones/:id" element={<ZoneDetailPlaceholder />} />
-          <Route path="alerts" element={<AlertsPlaceholder />} />
+          <Route path="alerts" element={<Alerts />} />
           <Route path="flow" element={<FlowPlaceholder />} />
           <Route path="devices" element={<DevicesPlaceholder />} />
           <Route
