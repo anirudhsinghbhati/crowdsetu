@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #14181F;
+    color: #E8E6DF;
+    font-family: 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Gujarati', system-ui, sans-serif;
+  }
+
+  /* Numbers use tabular figures */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Custom dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #14181F;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2B3340;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #98A0AE;
+  }
+}
+
+/* Print stylesheet for 58mm thermal receipt slip */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-slip,
+  #printable-slip * {
+    visibility: visible;
+  }
+
+  #printable-slip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 58mm !important;
+    max-width: 58mm !important;
+    margin: 0 !important;
+    padding: 8px !important;
+    background: white !important;
+    color: black !important;
+    font-family: 'Noto Sans', monospace !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
