@@ -1,0 +1,31 @@
+export const gu = {
+  display: {
+    green: 'ખુલ્લું છે. કૃપા કરીને આગળ વધો',
+    yellow: 'ભીડ છે. ધીમે ચાલો',
+    red: 'પૂર્ણ છે. વૈકલ્પિક માર્ગનો ઉપયોગ કરો',
+    grey: 'સ્ટાફની સૂચનાઓનું પાલન કરો',
+    alternateRoute: 'વૈકલ્પિક માર્ગ: ઘાટ એપ્રોચ પશ્ચિમ',
+  },
+  kiosk: {
+    title: 'યાત્રાળુ નોંધણી ડેસ્ક',
+    groupSize: 'જૂથ સંખ્યા',
+    selectGate: 'પ્રવેશ દ્વાર પસંદ કરો',
+    pilgrimNameOptional: 'નામ (વૈકલ્પિક)',
+    issueQr: 'ક્યૂઆર ઇશ્યૂ કરો',
+    noIdNote: 'ગોપનીયતા નોંધ: કોઈ ઓળખપત્ર સંગ્રહિત કરવામાં આવતું નથી.',
+    tokenIssued: 'નોંધણી સફળ',
+    printSlip: 'સ્લિપ પ્રિન્ટ કરો',
+    newRegistration: 'નવી નોંધણી',
+    searchPlaceholder: 'ટોકન આઈડી દાખલ કરો (દા.ત. TK-7842)',
+    scanQrBtn: 'ક્યૂઆર સ્કેન કરો',
+    lookupTitle: 'ટોકન ચેકપોઇન્ટ સ્થિતિ',
+    notFoundTitle: 'ટોકન મળ્યું નથી',
+    notFoundDesc: 'આઈડી તપાસો અથવા ફરીથી સ્કેન કરો.',
+    timeline: 'ચેકપોઇન્ટ સ્કેન સમયરેખા',
+  },
+  common: {
+    online: 'ઑનલાઇન',
+    offline: 'ઑફલાઇન',
+    degraded: 'ધીમું',
+  },
+};
