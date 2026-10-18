@@ -12,11 +12,11 @@ import { Heatmap } from './pages/Heatmap';
 import { Cameras } from './pages/Cameras';
 import { ZoneDetail } from './pages/ZoneDetail';
 import { Flow } from './pages/Flow';
+import { Devices } from './pages/Devices';
+import { Override } from './pages/Override';
+import { Settings } from './pages/Settings';
+import { Reports } from './pages/Reports';
 import {
-  DevicesPlaceholder,
-  OverridePlaceholder,
-  SettingsPlaceholder,
-  ReportsPlaceholder,
   KioskRegisterPlaceholder,
   KioskSlipPlaceholder,
   KioskLookupPlaceholder,
@@ -77,12 +77,12 @@ export const AppRouter: React.FC = () => {
           <Route path="zones/:id" element={<ZoneDetail />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="flow" element={<Flow />} />
-          <Route path="devices" element={<DevicesPlaceholder />} />
+          <Route path="devices" element={<Devices />} />
           <Route
             path="override"
             element={
               <ProtectedRoute allowedRoles={['admin', 'operator']}>
-                <OverridePlaceholder />
+                <Override />
               </ProtectedRoute>
             }
           />
@@ -90,11 +90,11 @@ export const AppRouter: React.FC = () => {
             path="settings"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <SettingsPlaceholder />
+                <Settings />
               </ProtectedRoute>
             }
           />
-          <Route path="reports" element={<ReportsPlaceholder />} />
+          <Route path="reports" element={<Reports />} />
         </Route>
 
         {/* Fallback */}
