@@ -16,11 +16,9 @@ import { Devices } from './pages/Devices';
 import { Override } from './pages/Override';
 import { Settings } from './pages/Settings';
 import { Reports } from './pages/Reports';
-import {
-  KioskRegisterPlaceholder,
-  KioskSlipPlaceholder,
-  KioskLookupPlaceholder,
-} from './pages/placeholders';
+import { KioskRegister } from './pages/KioskRegister';
+import { KioskSlip } from './pages/KioskSlip';
+import { KioskLookup } from './pages/KioskLookup';
 
 // Protected Route Guard
 const ProtectedRoute: React.FC<{
@@ -55,9 +53,9 @@ export const AppRouter: React.FC = () => {
 
         {/* Tablet Registration Kiosk */}
         <Route path="/kiosk" element={<KioskLayout />}>
-          <Route path="register" element={<KioskRegisterPlaceholder />} />
-          <Route path="token/:id" element={<KioskSlipPlaceholder />} />
-          <Route path="lookup" element={<KioskLookupPlaceholder />} />
+          <Route path="register" element={<KioskRegister />} />
+          <Route path="token/:id" element={<KioskSlip />} />
+          <Route path="lookup" element={<KioskLookup />} />
           <Route index element={<Navigate to="/kiosk/register" replace />} />
         </Route>
 
