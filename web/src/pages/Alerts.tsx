@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useToast } from '../components/ui/Toast';
 import { useLiveStore } from '../store/live';
+import { useAuthStore } from '../store/auth';
 import {
   Card,
   Table,
@@ -23,6 +24,7 @@ import type { Alert } from '../api/types';
 
 export const Alerts: React.FC = () => {
   const { showToast } = useToast();
+  const role = useAuthStore((state) => state.role);
   const liveAlerts = useLiveStore((state) => state.recentAlerts);
   const [activeTab, setActiveTab] = useState<'open' | 'ack' | 'all'>('open');
   const [selectedZone, setSelectedZone] = useState<string>('all');
@@ -228,14 +230,28 @@ export const Alerts: React.FC = () => {
                       </TableCell>
                       <TableCell className="text-right">
                         {isOpen ? (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="h-7 text-xs"
-                            onClick={(e) => handleAcknowledge(alert.id, e)}
-                          >
-                            Acknowledge
-                          </Button>
+                          role !== 'viewer' ? (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="h-7 text-xs"
+                              onClick={(e) => handleAcknowledge(alert.id, e)}
+                            >
+                              Acknowledge
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 text-xs text-muted"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDrawerAlert(alert);
+                              }}
+                            >
+                              Inspect
+                            </Button>
+                          )
                         ) : (
                           <Button
                             variant="ghost"
@@ -363,13 +379,19 @@ export const Alerts: React.FC = () => {
               />
 
               {drawerAlert.status === 'open' ? (
-                <Button
-                  variant="primary"
-                  className="w-full h-11"
-                  onClick={() => handleAcknowledge(drawerAlert.id)}
-                >
-                  Acknowledge
-                </Button>
+                role !== 'viewer' ? (
+                  <Button
+                    variant="primary"
+                    className="w-full h-11"
+                    onClick={() => handleAcknowledge(drawerAlert.id)}
+                  >
+                    Acknowledge
+                  </Button>
+                ) : (
+                  <div className="p-3 bg-bg border border-border text-muted text-xs font-medium rounded-control text-center">
+                    Read-only observer mode (Acknowledgement requires operator or admin role)
+                  </div>
+                )
               ) : (
                 <div className="p-3 bg-[#2FA866]/10 border border-[#2FA866]/30 text-[#2FA866] text-xs font-semibold rounded-control text-center">
                   Alert has been acknowledged by duty operator.

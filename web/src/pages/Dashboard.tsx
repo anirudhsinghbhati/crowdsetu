@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../api/client';
 import { useLiveStore } from '../store/live';
+import { useAuthStore } from '../store/auth';
 import { useToast } from '../components/ui/Toast';
 import {
   Card,
@@ -27,6 +28,7 @@ import type { Zone, Alert } from '../api/types';
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const role = useAuthStore((state) => state.role);
   const liveZones = useLiveStore((state) => state.zones);
   const liveAlerts = useLiveStore((state) => state.recentAlerts);
   const liveDeviceStatuses = useLiveStore((state) => state.deviceStatuses);
@@ -378,14 +380,24 @@ export const Dashboard: React.FC = () => {
                           {isOpen ? 'Assigned · Device team' : 'Acknowledged'}
                         </span>
                         {isOpen ? (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="h-7 px-2.5 text-[11px]"
-                            onClick={(e) => handleAcknowledge(alert.id, e)}
-                          >
-                            Acknowledge
-                          </Button>
+                          role !== 'viewer' ? (
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="h-7 px-2.5 text-[11px]"
+                              onClick={(e) => handleAcknowledge(alert.id, e)}
+                            >
+                              Acknowledge
+                            </Button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => navigate('/alerts')}
+                              className="text-[11px] text-muted hover:text-text font-medium"
+                            >
+                              Inspect
+                            </button>
+                          )
                         ) : (
                           <button
                             type="button"
