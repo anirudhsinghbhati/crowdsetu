@@ -60,3 +60,4 @@ def list_checkpoints():
         {"id": 4, "name": "Sanctum Security Check", "zone_id": 3, "zone_name": "Sanctum Corridor"},
         {"id": 5, "name": "Exit Gate Scanner", "zone_id": 4, "zone_name": "Exit Lane"},
     ]
+

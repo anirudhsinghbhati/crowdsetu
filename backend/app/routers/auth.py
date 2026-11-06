@@ -32,3 +32,4 @@ def remove_user(username: str, current_user: User = Depends(require_role(["admin
     if not success:
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": f"User {username} deleted successfully"}
+

@@ -9,3 +9,4 @@ def test_camera_stream_headers(client):
         chunk = next(res.iter_bytes())
         assert b"--frame" in chunk
         assert b"Content-Type: image/jpeg" in chunk
+

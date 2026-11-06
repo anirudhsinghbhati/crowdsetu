@@ -76,3 +76,4 @@ def update_device_heartbeat(
         )
         cursor.execute("SELECT * FROM devices WHERE id = ?;", (device_id,))
         return row_to_device(cursor.fetchone())
+

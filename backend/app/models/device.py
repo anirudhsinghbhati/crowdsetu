@@ -21,3 +21,4 @@ class DeviceHeartbeatRequest(BaseModel):
     battery: Optional[int] = None
     signal: Optional[int] = None
     ip: Optional[str] = None
+

@@ -191,3 +191,4 @@ def generate_pdf_content(report_type: str, date_range: str) -> bytes:
 
     doc.build(story)
     return buffer.getvalue()
+

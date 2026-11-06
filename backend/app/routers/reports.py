@@ -52,3 +52,4 @@ def export_flow_csv(window: str = "5m"):
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=crowdsetu_flow_{window}.csv"}
     )
+

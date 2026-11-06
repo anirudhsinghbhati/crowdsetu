@@ -196,3 +196,4 @@ def stop_simulation():
     if _simulation_task and not _simulation_task.done():
         _simulation_task.cancel()
         _simulation_task = None
+

@@ -20,3 +20,4 @@ def test_cv_telemetry_ingest(client):
     assert alerts_res.status_code == 200
     latest_alert = alerts_res.json()[0]
     assert "Computer Vision alert" in latest_alert["msg"] or "reached" in latest_alert["msg"]
+

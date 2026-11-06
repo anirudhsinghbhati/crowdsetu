@@ -17,3 +17,4 @@ __all__ = [
     "CVTelemetryRequest",
     "LiveMessage", "DensityMessage", "FlowMessage", "AlertMessage", "DeviceMessage"
 ]
+

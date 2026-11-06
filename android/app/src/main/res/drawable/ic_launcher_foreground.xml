@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Stylized CrowdSetu Bridge / Gateway & QR Target in Saffron -->
+    <path
+        android:fillColor="#E8962E"
+        android:pathData="M30,30 L78,30 L78,40 L60,54 L78,68 L78,78 L30,78 L30,68 L48,54 L30,40 Z" />
+    <path
+        android:fillColor="#2FA866"
+        android:pathData="M50,48 L58,48 L58,60 L50,60 Z" />
+</vector>
+

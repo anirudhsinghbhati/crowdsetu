@@ -18,3 +18,4 @@ def test_device_heartbeat(client):
     assert data["status"] == "online"
     assert data["last_seen"] == "Just now"
     assert data["signal"] == 99
+

@@ -142,3 +142,4 @@ async def generate_mjpeg_stream(camera_id: int) -> AsyncGenerator[bytes, None]:
             b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n"
         )
         await asyncio.sleep(0.2) # ~5 FPS
+

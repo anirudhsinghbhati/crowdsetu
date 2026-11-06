@@ -92,3 +92,4 @@ async def update_thresholds(zone_id: int, req: UpdateThresholdsRequest):
         "ts": datetime.now(timezone.utc).isoformat(),
     })
     return zone
+

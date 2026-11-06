@@ -310,3 +310,4 @@ def init_db() -> None:
                 """,
                 initial_reports
             )
+

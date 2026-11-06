@@ -15,3 +15,4 @@ class ReportHistoryItem(BaseModel):
     generated: str
     format: Literal["PDF", "CSV"]
     status: str
+

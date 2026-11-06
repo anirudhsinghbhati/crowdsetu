@@ -28,3 +28,4 @@ def test_acknowledge_alert(client):
     res_get = client.get(f"/api/alerts/{target_id}")
     assert res_get.status_code == 200
     assert res_get.json()["status"] == "ack"
+

@@ -52,3 +52,4 @@ async def websocket_live_endpoint(websocket: WebSocket):
         await manager.disconnect(websocket)
     except Exception:
         await manager.disconnect(websocket)
+

@@ -22,3 +22,4 @@ def ack_alert(alert_id: int):
     if not alert:
         raise HTTPException(status_code=404, detail="Alert not found")
     return alert
+

@@ -10,3 +10,4 @@ async def camera_stream(camera_id: int):
         generate_mjpeg_stream(camera_id),
         media_type="multipart/x-mixed-replace; boundary=frame"
     )
+

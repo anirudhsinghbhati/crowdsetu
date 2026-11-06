@@ -46,3 +46,4 @@ def test_users_list_and_create(client):
     # Delete user
     del_res = client.delete("/api/users/test_officer", headers=headers)
     assert del_res.status_code == 200
+

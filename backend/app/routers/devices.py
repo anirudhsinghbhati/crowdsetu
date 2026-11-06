@@ -41,3 +41,4 @@ async def device_heartbeat(device_id: int, req: DeviceHeartbeatRequest):
         "ts": datetime.now(timezone.utc).isoformat(),
     })
     return dev
+

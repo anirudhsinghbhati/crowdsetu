@@ -88,3 +88,4 @@ async def ingest_cv_telemetry(req: CVTelemetryRequest):
         })
 
     return updated_zone
+

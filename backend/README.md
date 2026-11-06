@@ -238,3 +238,4 @@ Or run the full stack (FastAPI backend + React frontend) via root Docker Compose
 docker compose up --build
 ```
 This serves the frontend at [http://localhost](http://localhost) and the API at [http://localhost:8000](http://localhost:8000).
+

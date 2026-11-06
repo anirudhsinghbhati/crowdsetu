@@ -126,3 +126,4 @@ def delete_user(username: str) -> bool:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM users WHERE lower(username) = lower(?);", (username,))
         return cursor.rowcount > 0
+

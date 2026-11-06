@@ -32,3 +32,4 @@ class DeviceMessage(BaseModel):
     ts: Optional[str] = None
 
 LiveMessage = Union[DensityMessage, FlowMessage, AlertMessage, DeviceMessage]
+

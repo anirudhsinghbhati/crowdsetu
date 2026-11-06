@@ -134,3 +134,4 @@ def batch_record_scans(scans_data: List[dict]) -> int:
                 )
                 inserted += 1
     return inserted
+

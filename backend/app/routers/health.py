@@ -18,3 +18,4 @@ def health_check():
         "zones_count": len(zones),
         "devices_count": len(devices),
     }
+

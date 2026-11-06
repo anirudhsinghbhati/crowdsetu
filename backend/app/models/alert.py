@@ -11,3 +11,4 @@ class Alert(BaseModel):
     status: Literal["open", "ack"]
     ts: str
     snapshot_url: Optional[str] = None
+

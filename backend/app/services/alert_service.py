@@ -79,3 +79,4 @@ def create_alert(zone_id: int, level: StatusLevel, msg: str, snapshot_url: Optio
             ts=now_iso,
             snapshot_url=snapshot_url,
         )
+

@@ -13,3 +13,13 @@ __pycache__/
 .pytest_cache/
 .env
 backend/.env
+
+# Android build and gradle files
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+local.properties
+.cxx/
+captures/

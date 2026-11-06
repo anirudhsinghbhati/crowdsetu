@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="crowdsetu_bg">#14181F</color>
+    <color name="crowdsetu_panel">#1D232D</color>
+    <color name="crowdsetu_border">#2B3340</color>
+    <color name="crowdsetu_text">#E8E6DF</color>
+    <color name="crowdsetu_muted">#98A0AE</color>
+    <color name="crowdsetu_accent">#E8962E</color>
+    <color name="crowdsetu_green">#2FA866</color>
+    <color name="crowdsetu_yellow">#E5B91F</color>
+    <color name="crowdsetu_red">#D93C3C</color>
+    <color name="crowdsetu_grey">#7A8190</color>
+</resources>
+

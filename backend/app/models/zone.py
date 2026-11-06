@@ -46,3 +46,4 @@ class OverrideRequest(BaseModel):
 class UpdateThresholdsRequest(BaseModel):
     yellow_pct: int = Field(..., ge=10, le=95)
     red_pct: int = Field(..., ge=20, le=100)
+

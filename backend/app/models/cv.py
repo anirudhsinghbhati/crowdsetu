@@ -8,3 +8,4 @@ class CVTelemetryRequest(BaseModel):
     exits_delta: Optional[int] = 0
     fps: Optional[float] = None
     timestamp: Optional[str] = None
+

@@ -49,3 +49,4 @@ def test_record_scan(client):
 def test_lookup_nonexistent_token(client):
     res = client.get("/api/pilgrims/TK-999999")
     assert res.status_code == 404
+

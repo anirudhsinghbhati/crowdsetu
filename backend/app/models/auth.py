@@ -23,3 +23,4 @@ class CreateUserRequest(BaseModel):
     password: str
     role: UserRole = "operator"
     name: Optional[str] = None
+

@@ -26,3 +26,4 @@ class RecordScanRequest(BaseModel):
     checkpoint: str
     direction: Literal["IN", "OUT"] = "IN"
     ts: Optional[str] = None
+
