@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: crowdsetu-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - DEBUG=false
+      - SECRET_KEY=crowdsetu-production-secret-2026
+      - DATABASE_PATH=/app/data/crowdsetu.db
+      - ENABLE_SIMULATION=true
+      - SIMULATION_INTERVAL_SECONDS=1.5
+    volumes:
+      - backend-data:/app/data
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: crowdsetu-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:
