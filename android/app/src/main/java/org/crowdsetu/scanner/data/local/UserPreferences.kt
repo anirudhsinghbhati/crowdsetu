@@ -17,7 +17,7 @@ class UserPreferences(context: Context) {
         private const val KEY_DIRECTION = "selected_direction"
         private const val KEY_LAST_SYNC = "last_sync_time"
         private const val KEY_BASE_URL = "api_base_url"
-        const val DEFAULT_BASE_URL = "http://10.0.2.2:8000" // Standard emulator loopback to host FastAPI
+        const val DEFAULT_BASE_URL = "http://10.127.57.212:8000" // PC local Wi-Fi IP
     }
 
     var authToken: String?

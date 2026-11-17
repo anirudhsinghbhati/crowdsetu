@@ -43,5 +43,24 @@ class AuthRepository(
     fun logout() {
         userPreferences.clearSession()
     }
+
+    fun getServerUrl(): String = userPreferences.baseUrl
+
+    fun setServerUrl(url: String) {
+        userPreferences.baseUrl = url.trim()
+    }
+
+    suspend fun testConnection(): Result<String> {
+        return try {
+            val response = networkClient.getApi().checkHealth()
+            if (response.isSuccessful) {
+                Result.success("Connected to CrowdSetu Backend (${userPreferences.baseUrl})")
+            } else {
+                Result.failure(Exception("HTTP ${response.code()}: Server returned error"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Cannot reach ${userPreferences.baseUrl} (${e.localizedMessage ?: "Connection refused"})"))
+        }
+    }
 }
 

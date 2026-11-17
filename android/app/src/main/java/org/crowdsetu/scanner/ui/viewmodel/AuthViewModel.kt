@@ -12,7 +12,11 @@ import org.crowdsetu.scanner.data.repository.AuthRepository
 data class AuthUiState(
     val username: String = "",
     val password: String = "",
+    val serverUrl: String = "",
     val isLoading: Boolean = false,
+    val isTestingServer: Boolean = false,
+    val serverTestMessage: String? = null,
+    val isServerConnected: Boolean? = null,
     val errorMessage: String? = null,
     val isLoginSuccessful: Boolean = false
 )
@@ -21,7 +25,9 @@ class AuthViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AuthUiState())
+    private val _uiState = MutableStateFlow(
+        AuthUiState(serverUrl = authRepository.getServerUrl())
+    )
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     fun onUsernameChange(value: String) {
@@ -30,6 +36,35 @@ class AuthViewModel(
 
     fun onPasswordChange(value: String) {
         _uiState.update { it.copy(password = value, errorMessage = null) }
+    }
+
+    fun onServerUrlChange(value: String) {
+        _uiState.update { it.copy(serverUrl = value, serverTestMessage = null, isServerConnected = null) }
+        authRepository.setServerUrl(value)
+    }
+
+    fun testServer() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isTestingServer = true, serverTestMessage = null) }
+            val result = authRepository.testConnection()
+            result.onSuccess { msg ->
+                _uiState.update {
+                    it.copy(
+                        isTestingServer = false,
+                        isServerConnected = true,
+                        serverTestMessage = msg
+                    )
+                }
+            }.onFailure { err ->
+                _uiState.update {
+                    it.copy(
+                        isTestingServer = false,
+                        isServerConnected = false,
+                        serverTestMessage = err.message ?: "Failed to connect to server"
+                    )
+                }
+            }
+        }
     }
 
     fun fillDemoCredentials(role: String) {
@@ -60,4 +95,3 @@ class AuthViewModel(
         }
     }
 }
-
