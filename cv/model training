@@ -1,0 +1,213 @@
+# ============================================================
+# CrowdSetu — TRAIN CSRNet FROM SCRATCH (one Colab cell)
+#
+# Before running:  Runtime > Change runtime type > T4 GPU
+# What it does:    mounts Drive -> downloads ShanghaiTech (Kaggle) -> builds density maps
+#                  -> trains CSRNet -> saves checkpoints to Google Drive every epoch.
+# If Colab disconnects: just run this same cell again. It resumes from Drive.
+# Result:          MyDrive/crowdsetu_checkpoints/csrnet_best.pth
+# ============================================================
+import os, glob, shutil, time, collections
+import numpy as np
+import cv2
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+from torchvision import models
+import scipy.io as sio
+from scipy.ndimage import gaussian_filter
+from google.colab import drive, files
+
+EPOCHS = 100
+BATCH_SIZE = 4
+CROP = 256
+LR = 1e-6
+SIGMA = 15.0          # fixed Gaussian spread (ShanghaiTech Part B)
+DRIVE_DIR = "/content/drive/MyDrive/crowdsetu_checkpoints"
+
+# ---------------- 0. GPU + Drive ----------------
+if not torch.cuda.is_available():
+    raise SystemExit("No GPU. Runtime > Change runtime type > T4 GPU, then run again.")
+device = "cuda"
+print("GPU:", torch.cuda.get_device_name(0))
+drive.mount("/content/drive")
+os.makedirs(DRIVE_DIR, exist_ok=True)
+
+# ---------------- 1. Dataset download ----------------
+def find_part_b():
+    cands = [c for c in glob.glob("/content/ShanghaiTech/**/part_B/train_data/images", recursive=True)
+             if "h5_empty" not in c]
+    cands = [c for c in cands if len(os.listdir(c)) > 0]
+    return os.path.dirname(os.path.dirname(cands[0])) if cands else None
+
+PART_B = find_part_b()
+if PART_B is None:
+    os.system("pip install -q kaggle")
+    def kaggle_download():
+        return os.system("kaggle datasets download -d tthien/shanghaitech -p /content") == 0 \
+               and os.path.exists("/content/shanghaitech.zip")
+    if not kaggle_download():
+        print("Kaggle needs credentials. kaggle.com > Settings > API > Create New Token,")
+        print("then upload the kaggle.json file here:")
+        up = files.upload()
+        os.makedirs(os.path.expanduser("~/.kaggle"), exist_ok=True)
+        shutil.copy(list(up.keys())[0], os.path.expanduser("~/.kaggle/kaggle.json"))
+        os.chmod(os.path.expanduser("~/.kaggle/kaggle.json"), 0o600)
+        if not kaggle_download():
+            raise SystemExit("Kaggle download failed. Check your kaggle.json.")
+    os.system("unzip -oq /content/shanghaitech.zip -d /content/ShanghaiTech")
+    PART_B = find_part_b()
+if PART_B is None:
+    raise SystemExit("Could not find part_B/train_data/images after extracting the dataset.")
+print("Dataset:", PART_B)
+
+# ---------------- 2. Density maps (fast: local patch per head, edge points clamped) ----------------
+def add_gaussian(density, xi, yi, sigma):
+    h, w = density.shape
+    r = max(1, int(4 * sigma) + 1)
+    x0, x1 = max(0, xi - r), min(w, xi + r + 1)
+    y0, y1 = max(0, yi - r), min(h, yi + r + 1)
+    patch = np.zeros((y1 - y0, x1 - x0), np.float32)
+    patch[yi - y0, xi - x0] = 1.0
+    patch = gaussian_filter(patch, sigma=sigma, mode="constant")
+    s = patch.sum()
+    if s > 0:
+        patch /= s
+    density[y0:y1, x0:x1] += patch
+
+def build_density_maps(split):
+    img_dir = f"{PART_B}/{split}/images"
+    gt_dir = f"{PART_B}/{split}/ground-truth"
+    out_dir = f"{PART_B}/{split}/density_maps"
+    os.makedirs(out_dir, exist_ok=True)
+    names = sorted(f for f in os.listdir(img_dir) if f.lower().endswith((".jpg", ".png")))
+    if len(glob.glob(out_dir + "/*.npy")) == len(names):
+        print(f"{split}: density maps already built ({len(names)})")
+        return
+    bad = 0
+    for i, fn in enumerate(names):
+        stem = os.path.splitext(fn)[0]
+        img = cv2.imread(f"{img_dir}/{fn}")
+        h, w = img.shape[:2]
+        pts = sio.loadmat(f"{gt_dir}/GT_{stem}.mat")["image_info"][0, 0][0, 0][0]
+        dm = np.zeros((h, w), np.float32)
+        for x, y in pts:
+            add_gaussian(dm, min(max(int(round(x)), 0), w - 1), min(max(int(round(y)), 0), h - 1), SIGMA)
+        if abs(dm.sum() - len(pts)) > max(0.01 * len(pts), 0.5):
+            bad += 1
+            print(f"  !! {stem}: {len(pts)} points but density sum {dm.sum():.2f}")
+        np.save(f"{out_dir}/{stem}.npy", dm)
+    print(f"{split}: built {len(names)} density maps ({bad} mismatches)")
+
+build_density_maps("train_data")
+build_density_maps("test_data")
+
+# ---------------- 3. Dataset ----------------
+MEAN = np.array([0.485, 0.456, 0.406], np.float32)
+STD = np.array([0.229, 0.224, 0.225], np.float32)
+
+def sum_pool(d, f=8):
+    h, w = d.shape
+    h, w = (h // f) * f, (w // f) * f
+    return d[:h, :w].reshape(h // f, f, w // f, f).sum(axis=(1, 3))
+
+class ST(Dataset):
+    def __init__(self, split, train):
+        self.dir = f"{PART_B}/{split}"
+        self.train = train
+        self.names = sorted(f for f in os.listdir(f"{self.dir}/images") if f.lower().endswith((".jpg", ".png")))
+    def __len__(self):
+        return len(self.names)
+    def __getitem__(self, i):
+        stem = os.path.splitext(self.names[i])[0]
+        img = cv2.cvtColor(cv2.imread(f"{self.dir}/images/{self.names[i]}"), cv2.COLOR_BGR2RGB)
+        den = np.load(f"{self.dir}/density_maps/{stem}.npy")
+        if self.train:
+            h, w = img.shape[:2]
+            if h < CROP or w < CROP:
+                ph, pw = max(0, CROP - h), max(0, CROP - w)
+                img = cv2.copyMakeBorder(img, 0, ph, 0, pw, cv2.BORDER_REFLECT)
+                den = np.pad(den, ((0, ph), (0, pw)))
+                h, w = img.shape[:2]
+            t, l = np.random.randint(0, h - CROP + 1), np.random.randint(0, w - CROP + 1)
+            img, den = img[t:t + CROP, l:l + CROP], den[t:t + CROP, l:l + CROP]
+            if np.random.rand() < 0.5:
+                img, den = np.ascontiguousarray(img[:, ::-1]), np.ascontiguousarray(den[:, ::-1])
+        else:
+            h, w = (img.shape[0] // 8) * 8, (img.shape[1] // 8) * 8
+            img, den = img[:h, :w], den[:h, :w]
+        x = (img.astype(np.float32) / 255.0 - MEAN) / STD
+        return (torch.from_numpy(x.transpose(2, 0, 1)).float(),
+                torch.from_numpy(sum_pool(den)).float().unsqueeze(0))
+
+# ---------------- 4. Model ----------------
+def make_layers(cfg, in_ch=3, dilation=False):
+    d = 2 if dilation else 1
+    layers = []
+    for v in cfg:
+        if v == "M":
+            layers.append(nn.MaxPool2d(2, 2))
+        else:
+            layers += [nn.Conv2d(in_ch, v, 3, padding=d, dilation=d), nn.ReLU(inplace=True)]
+            in_ch = v
+    return nn.Sequential(*layers)
+
+class CSRNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.frontend = make_layers([64, 64, "M", 128, 128, "M", 256, 256, 256, "M", 512, 512, 512])
+        self.backend = make_layers([512, 512, 512, 256, 128, 64], in_ch=512, dilation=True)
+        self.output_layer = nn.Conv2d(64, 1, 1)
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.normal_(m.weight, std=0.01)
+                nn.init.constant_(m.bias, 0)
+        vgg = models.vgg16(weights=models.VGG16_Weights.IMAGENET1K_V1)
+        fs, vs = list(self.frontend.state_dict().items()), list(vgg.state_dict().items())
+        self.frontend.load_state_dict(collections.OrderedDict((fs[i][0], vs[i][1]) for i in range(len(fs))))
+    def forward(self, x):
+        return self.output_layer(self.backend(self.frontend(x)))
+
+# ---------------- 5. Train (with resume) ----------------
+train_loader = DataLoader(ST("train_data", True), batch_size=BATCH_SIZE, shuffle=True, num_workers=2, drop_last=True)
+val_loader = DataLoader(ST("test_data", False), batch_size=1, shuffle=False, num_workers=2)
+print(f"Train: {len(train_loader.dataset)} images | Val: {len(val_loader.dataset)} images")
+
+model = CSRNet().to(device)
+criterion = nn.MSELoss(reduction="sum")
+optimizer = torch.optim.SGD(model.parameters(), lr=LR, momentum=0.95, weight_decay=5e-4)
+
+LAST, BEST = f"{DRIVE_DIR}/csrnet_last.pth", f"{DRIVE_DIR}/csrnet_best.pth"
+start_epoch, best_mae = 1, float("inf")
+if os.path.exists(LAST):
+    ck = torch.load(LAST, map_location=device)
+    model.load_state_dict(ck["model"]); optimizer.load_state_dict(ck["optimizer"])
+    start_epoch, best_mae = ck["epoch"] + 1, ck["best_mae"]
+    print(f"Resuming from epoch {start_epoch} (best MAE so far {best_mae:.2f})")
+
+def evaluate():
+    model.eval(); err = 0.0
+    with torch.no_grad():
+        for img, tgt in val_loader:
+            err += abs(model(img.to(device)).sum().item() - tgt.sum().item())
+    model.train()
+    return err / len(val_loader)
+
+for epoch in range(start_epoch, EPOCHS + 1):
+    model.train(); t0 = time.time(); total = 0.0
+    for img, tgt in train_loader:
+        loss = criterion(model(img.to(device)), tgt.to(device))
+        optimizer.zero_grad(); loss.backward(); optimizer.step()
+        total += loss.item()
+    mae = evaluate()
+    print(f"[epoch {epoch:3d}/{EPOCHS}] train_loss={total / len(train_loader):.4f}  val_MAE={mae:.2f}  ({time.time() - t0:.0f}s)")
+    if mae < best_mae:
+        best_mae = mae
+        torch.save(model.state_dict(), BEST)
+        print(f"  -> new best MAE {best_mae:.2f}, saved to {BEST}")
+    torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(),
+                "epoch": epoch, "best_mae": best_mae}, LAST)
+
+print(f"\nDONE. Best val MAE: {best_mae:.2f}")
+print(f"Checkpoint on Drive: {BEST}")
+files.download(BEST)
