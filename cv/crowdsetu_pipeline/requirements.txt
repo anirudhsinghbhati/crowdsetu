@@ -1,0 +1,10 @@
+numpy==1.26.4
+opencv-python==4.10.0.84
+pydantic==2.10.6
+PyYAML==6.0.2
+requests==2.32.3
+scipy==1.15.1
+matplotlib==3.10.0
+tensorboard==2.18.0
+torch==2.14.0
+torchvision==0.29.0

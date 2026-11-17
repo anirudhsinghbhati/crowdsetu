@@ -4,6 +4,7 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+<<<<<<< HEAD
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,3 +24,31 @@ app/build/
 local.properties
 .cxx/
 captures/
+=======
+
+# Python and local environments
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+
+# Data, model artifacts, and generated runs
+dataset/
+**/dataset/
+density_maps/
+**/density_maps/
+*.zip
+*.pth
+checkpoints/
+**/checkpoints/
+runs/
+**/runs/
+*.mp4
+*.avi
+.ipynb_checkpoints/
+>>>>>>> 7fc6393846c47f4887b23147df7b3af7e0d3c60a
