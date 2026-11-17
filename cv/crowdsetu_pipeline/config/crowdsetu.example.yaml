@@ -1,0 +1,42 @@
+model:
+  checkpoint_path: checkpoints/csrnet_best.pth
+  device: cpu
+  version: csrnet-shanghaitech-b-v0.1.0
+
+cameras:
+  - camera_id: gate-a
+    source: "${CROWDSETU_CAMERA_GATE_A}"
+    enabled: true
+    zones:
+      - zone_id: gate-a-queue
+        polygon:
+          - [0, 0]
+          - [2560, 0]
+          - [2560, 1440]
+          - [0, 1440]
+        real_area_sqm: 40.0
+        # Assumed Fruin LOS-inspired placeholders; venue authorities must confirm.
+        thresholds:
+          watch: 1.5
+          warning: 3.0
+          critical: 4.0
+        calibration:
+          scale_factor: 1.0
+          homography: null
+        smoothing:
+          method: ema
+          window_size: 5
+          ema_alpha: 0.4
+          outlier_factor: 3.0
+          warmup_samples: 3
+
+backend:
+  url: "${CROWDSETU_BACKEND_URL}"
+  api_key_env: CROWDSETU_BACKEND_API_KEY
+  timeout_seconds: 2.0
+
+runtime:
+  sample_interval_seconds: 1.5
+  log_level: INFO
+  frame_retention_enabled: false
+  data_dir: data

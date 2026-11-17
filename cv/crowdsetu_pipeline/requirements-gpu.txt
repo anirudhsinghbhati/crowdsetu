@@ -1,0 +1,11 @@
+# Use the CUDA-compatible torch/torchvision already supplied by Colab or Kaggle.
+# Do not replace the notebook runtime's GPU build with requirements.txt, which pins
+# the verified Windows CPU environment used for local smoke tests.
+numpy==1.26.4
+opencv-python==4.10.0.84
+pydantic==2.10.6
+PyYAML==6.0.2
+requests==2.32.3
+scipy==1.15.1
+matplotlib==3.10.0
+tensorboard==2.18.0

@@ -1,0 +1,83 @@
+{
+  "dataset_root": "C:\\Users\\bhavy\\OneDrive\\Documents\\Desktop\\final year project\\dataset\\ShanghaiTech\\part_A",
+  "split": "train_data",
+  "tolerance": 0.01,
+  "images_checked": 300,
+  "missing_files": [],
+  "within_tolerance": 300,
+  "outside_tolerance": 0,
+  "mean_relative_error": 8.848923695598742e-05,
+  "max_relative_error": 0.003663115449004121,
+  "worst_offenders": [
+    {
+      "image": "IMG_93.jpg",
+      "annotated_count": 273.0,
+      "density_sum": 271.9999694824219,
+      "relative_error": 0.003663115449004121,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_75.jpg",
+      "annotated_count": 296.0,
+      "density_sum": 295.00006103515625,
+      "relative_error": 0.0033781721785261826,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_246.jpg",
+      "annotated_count": 373.0,
+      "density_sum": 372.0,
+      "relative_error": 0.002680965147453083,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_219.jpg",
+      "annotated_count": 426.0,
+      "density_sum": 425.0,
+      "relative_error": 0.002347417840375587,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_231.jpg",
+      "annotated_count": 443.0,
+      "density_sum": 442.0000305175781,
+      "relative_error": 0.002257267454676919,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_165.jpg",
+      "annotated_count": 468.0,
+      "density_sum": 467.0000915527344,
+      "relative_error": 0.0021365565112513355,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_151.jpg",
+      "annotated_count": 987.0,
+      "density_sum": 984.9998168945312,
+      "relative_error": 0.002026527969066616,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_204.jpg",
+      "annotated_count": 549.0,
+      "density_sum": 548.0,
+      "relative_error": 0.0018214936247723133,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_177.jpg",
+      "annotated_count": 578.0,
+      "density_sum": 577.0,
+      "relative_error": 0.0017301038062283738,
+      "within_tolerance": true
+    },
+    {
+      "image": "IMG_251.jpg",
+      "annotated_count": 1205.0,
+      "density_sum": 1202.9996337890625,
+      "relative_error": 0.0016600549468360995,
+      "within_tolerance": true
+    }
+  ]
+}

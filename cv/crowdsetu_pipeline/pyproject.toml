@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools==75.8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crowdsetu"
+version = "0.1.0"
+description = "Production foundation for CCTV crowd-density monitoring"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "numpy==1.26.4",
+    "opencv-python==4.10.0.84",
+    "pydantic==2.10.6",
+    "PyYAML==6.0.2",
+    "requests==2.32.3",
+    "scipy==1.15.1",
+    "matplotlib==3.10.0",
+    "tensorboard==2.18.0",
+    "torch==2.14.0",
+    "torchvision==0.29.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black==25.1.0",
+    "pre-commit==4.1.0",
+    "pytest==8.3.4",
+    "tensorboard==2.18.0",
+    "ruff==0.9.4",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
