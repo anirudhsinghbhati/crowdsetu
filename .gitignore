@@ -4,3 +4,28 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+
+# Python and local environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+
+# Data, model artifacts, and generated runs
+dataset/
+**/dataset/
+density_maps/
+**/density_maps/
+*.zip
+*.pth
+checkpoints/
+**/checkpoints/
+runs/
+**/runs/
+*.mp4
+*.avi
+.ipynb_checkpoints/
